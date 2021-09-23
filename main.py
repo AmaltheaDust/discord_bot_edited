@@ -1,23 +1,25 @@
 import discord
 from discord.ext import commands
+from config import Config
 
 import os
 
-#import all of the cogs
+# import all of the cogs
 from main_cog import main_cog
 from image_cog import image_cog
 from music_cog import music_cog
 
-bot = commands.Bot(command_prefix='/')
+bot = commands.Bot(command_prefix='!')
 
-#remove the default help command so that we can write out own
+# remove the default help command so that we can write out own
 bot.remove_command('help')
 
-#register the class with the bot
+# register the class with the bot
 bot.add_cog(main_cog(bot))
 bot.add_cog(image_cog(bot))
 bot.add_cog(music_cog(bot))
 
-#start the bot with our token
-bot.run(os.getenv("TOKEN"))
+# start the bot with our token
+
+bot.run(Config.discord_token)
 

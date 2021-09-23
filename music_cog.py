@@ -1,23 +1,27 @@
 import discord
 from discord.ext import commands
-
+from urllib.parse import quote
+import urllib.parse
 from youtube_dl import YoutubeDL
+
+abs_path_ffmpeg = r"ffmpeg\bin\ffmpeg.exe"
+
 
 class music_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-        #all the music related stuff
+        # all the music related stuff
         self.is_playing = False
 
         # 2d array containing [song, channel]
         self.music_queue = []
-        self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True'}
+        self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
         self.vc = ""
 
-     #searching the item on youtube
+    # searching the item on youtube
     def search_yt(self, item):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try: 
@@ -37,7 +41,9 @@ class music_cog(commands.Cog):
             #remove the first element as you are currently playing it
             self.music_queue.pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+
+
+            self.vc.play(discord.FFmpegPCMAudio(m_url, executable=abs_path_ffmpeg, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
         else:
             self.is_playing = False
 
@@ -59,7 +65,7 @@ class music_cog(commands.Cog):
             #remove the first element as you are currently playing it
             self.music_queue.pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, executable=abs_path_ffmpeg, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
         else:
             self.is_playing = False
 
